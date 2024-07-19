@@ -21,7 +21,7 @@ spring:
   # todo 需替换配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/my_db1
+    url: jdbc:mysql://localhost:3306/dida
     username: root
     password: zxc123...
   # Redis 配置
@@ -73,4 +73,4 @@ knife4j:
       default:
         api-rule: package
         api-rule-resources:
-          - com.xxtian.springbootinit.controller
+          - com.victiny.dida.controller

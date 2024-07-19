@@ -4,9 +4,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xxtian.springbootinit.mapper.PostThumbMapper">
+<mapper namespace="com.victiny.dida.mapper.PostThumbMapper">
 
-    <resultMap id="BaseResultMap" type="com.xxtian.springbootinit.model.entity.PostThumb">
+    <resultMap id="BaseResultMap" type="com.victiny.dida.model.entity.PostThumb">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="postId" column="postId" jdbcType="BIGINT"/>
             <result property="userId" column="userId" jdbcType="BIGINT"/>

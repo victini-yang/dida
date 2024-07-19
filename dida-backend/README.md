@@ -84,7 +84,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/my_db1
+    url: jdbc:mysql://localhost:3306/dida
     username: root
     password: 123456
 ```
@@ -172,7 +172,7 @@ PUT post_v1
 
 ```
 // 指定生成参数
-String packageName = "com.xxtian.springbootinit";
+String packageName = "com.victiny";
 String dataName = "用户评论";
 String dataKey = "userComment";
 String upperDataKey = "UserComment";
