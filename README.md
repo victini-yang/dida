@@ -1,4 +1,4 @@
-# 滴答 - AI 答题应用平台PS F:\it\yupi\dida> git push origin master
+# 滴答 - AI 答题应用平台
 fatal: unable to access 'https://github.com/victini-yang/dida.git/': HTTP/2 stream 1 was not closed cleanly before end of the underlying stream
 
 
