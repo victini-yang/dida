@@ -1,24 +1,29 @@
-<!--内容-->
 <template>
-  <!--  搜索-->
   <a-form
     :model="formSearchParams"
     :style="{ marginBottom: '20px' }"
     layout="inline"
     @submit="doSearch"
   >
-    <a-form-item field="userName" label="用户名">
+    <a-form-item field="resultName" label="结果名称">
       <a-input
+        v-model="formSearchParams.resultName"
+        placeholder="请输入结果名称"
         allow-clear
-        v-model="formSearchParams.userName"
-        placeholder="请输入用户名"
       />
     </a-form-item>
-    <a-form-item field="userProfile" label="用户简介">
+    <a-form-item field="resultDesc" label="结果描述">
       <a-input
+        v-model="formSearchParams.resultDesc"
+        placeholder="请输入结果描述"
         allow-clear
-        v-model="formSearchParams.userProfile"
-        placeholder="请输入用户简介"
+      />
+    </a-form-item>
+    <a-form-item field="appId" label="应用 id">
+      <a-input
+        v-model="formSearchParams.appId"
+        placeholder="请输入应用 id"
+        allow-clear
       />
     </a-form-item>
     <a-form-item>
@@ -27,7 +32,6 @@
       </a-button>
     </a-form-item>
   </a-form>
-  <!--  应用表格数据，显示总数、记录数、当前页-->
   <a-table
     :columns="columns"
     :data="dataList"
@@ -39,18 +43,21 @@
     }"
     @page-change="onPageChange"
   >
-    <!--  表格列图片渲染-->
-    <template #userAvatar="{ record }">
-      <a-image width="64" :src="record.userAvatar" />
+    <template #resultPicture="{ record }">
+      <a-image width="64" :src="record.resultPicture" />
     </template>
-    <!--    引入创建时间、修改时间的插槽-->
+    <template #appType="{ record }">
+      {{ APP_TYPE_MAP[record.appType] }}
+    </template>
+    <template #scoringStrategy="{ record }">
+      {{ APP_SCORING_STRATEGY_MAP[record.scoringStrategy] }}
+    </template>
     <template #createTime="{ record }">
       {{ dayjs(record.createTime).format("YYYY-MM-DD HH:mm:ss") }}
     </template>
     <template #updateTime="{ record }">
-      {{ dayjs(record.createTime).format("YYYY-MM-DD HH:mm:ss") }}
+      {{ dayjs(record.updateTime).format("YYYY-MM-DD HH:mm:ss") }}
     </template>
-    <!--    添加修改、删除插槽-->
     <template #optional="{ record }">
       <a-space>
         <a-button status="danger" @click="doDelete(record)">删除</a-button>
@@ -59,18 +66,19 @@
   </a-table>
 </template>
 
-<!--行为-->
 <script setup lang="ts">
 import { ref, watchEffect } from "vue";
 import {
-  deleteUserUsingPost,
-  listUserByPageUsingPost,
-} from "@/api/userController";
+  deleteUserAnswerUsingPost,
+  listMyUserAnswerVoByPageUsingPost,
+  listUserAnswerByPageUsingPost,
+} from "@/api/userAnswerController";
 import API from "@/api";
 import message from "@arco-design/web-vue/es/message";
 import { dayjs } from "@arco-design/web-vue/es/_utils/date";
+import { APP_SCORING_STRATEGY_MAP, APP_TYPE_MAP } from "@/constant/app";
 
-const formSearchParams = ref<API.UserQueryRequest>({});
+const formSearchParams = ref<API.UserAnswerQueryRequest>({});
 
 // 初始化搜索条件（不应该被修改）
 const initSearchParams = {
@@ -78,18 +86,17 @@ const initSearchParams = {
   pageSize: 10,
 };
 
-// 搜索参数,响应式编程
-const searchParams = ref<API.UserQueryRequest>({
+const searchParams = ref<API.UserAnswerQueryRequest>({
   ...initSearchParams,
 });
-// 定义数据列表
-const dataList = ref<API.User[]>([]);
-// 定义总数
+const dataList = ref<API.UserAnswerVO[]>([]);
 const total = ref<number>(0);
 
-// 表格数据
+/**
+ * 加载数据
+ */
 const loadData = async () => {
-  const res = await listUserByPageUsingPost(searchParams.value);
+  const res = await listMyUserAnswerVoByPageUsingPost(searchParams.value);
   if (res.data.code === 0) {
     dataList.value = res.data.data?.records || [];
     total.value = res.data.data?.total || 0;
@@ -98,7 +105,9 @@ const loadData = async () => {
   }
 };
 
-// 点击搜索，才会触发数据加载进行搜索
+/**
+ * 执行搜索
+ */
 const doSearch = () => {
   searchParams.value = {
     ...initSearchParams,
@@ -106,37 +115,43 @@ const doSearch = () => {
   };
 };
 
-// 分页改变事件，改变数据，触发页面重新加载
+/**
+ * 当分页变化时，改变搜索条件，触发数据加载
+ * @param page
+ */
 const onPageChange = (page: number) => {
   searchParams.value = {
-    // 创建新的变量，以防不会渲染
     ...searchParams.value,
     current: page,
   };
 };
 
-// 修改和删除
-const doDelete = async (record: API.User) => {
+/**
+ * 删除
+ * @param record
+ */
+const doDelete = async (record: API.UserAnswer) => {
   if (!record.id) {
     return;
   }
 
-  const res = await deleteUserUsingPost({
+  const res = await deleteUserAnswerUsingPost({
     id: record.id,
   });
   if (res.data.code === 0) {
-    message.success("删除成功");
     loadData();
   } else {
     message.error("删除失败，" + res.data.message);
   }
 };
 
-// 1.刚进入页面的时候加载数据 2.数据发生变化的时候重新加载数据
-// 通过监听数据
+/**
+ * 监听 searchParams 变量，改变时触发数据的重新加载
+ */
 watchEffect(() => {
   loadData();
 });
+
 // 表格列配置
 const columns = [
   {
@@ -144,35 +159,48 @@ const columns = [
     dataIndex: "id",
   },
   {
-    title: "账号",
-    dataIndex: "userAccount",
+    title: "选项",
+    dataIndex: "choices",
   },
   {
-    title: "用户名",
-    dataIndex: "userName",
+    title: "结果 id",
+    dataIndex: "resultId",
   },
   {
-    title: "用户头像",
-    dataIndex: "userAvatar",
-    slotName: "userAvatar",
+    title: "名称",
+    dataIndex: "resultName",
   },
   {
-    title: "用户简介",
-    dataIndex: "userProfile",
+    title: "描述",
+    dataIndex: "resultDesc",
   },
   {
-    title: "权限",
-    dataIndex: "userRole",
+    title: "图片",
+    dataIndex: "resultPicture",
+    slotName: "resultPicture",
+  },
+  {
+    title: "得分",
+    dataIndex: "resultScore",
+  },
+  {
+    title: "应用 id",
+    dataIndex: "appId",
+  },
+  {
+    title: "应用类型",
+    dataIndex: "appType",
+    slotName: "appType",
+  },
+  {
+    title: "评分策略",
+    dataIndex: "scoringStrategy",
+    slotName: "scoringStrategy",
   },
   {
     title: "创建时间",
     dataIndex: "createTime",
     slotName: "createTime",
-  },
-  {
-    title: "更新时间",
-    dataIndex: "updateTime",
-    slotName: "updateTime",
   },
   {
     title: "操作",
