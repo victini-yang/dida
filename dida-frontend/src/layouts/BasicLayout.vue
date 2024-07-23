@@ -31,8 +31,14 @@ import GlobalHeader from "@/components/GlobalHeader.vue";
   box-shadow: #eee 1px 1px 5px;
 }
 
+/**
+ * 内容页面边距控制、缩放页面布局
+ */
 #basicLayout .content {
-  margin-bottom: 28px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 28px;
   padding: 20px;
   background: linear-gradient(to right, #fefefe, #fff);
 }
