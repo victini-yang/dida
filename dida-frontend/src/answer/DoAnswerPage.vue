@@ -5,7 +5,7 @@
       <h1>{{ app.appName }}</h1>
       <p>{{ app.appDesc }}</p>
       <h2 style="margin-bottom: 32px">
-        {{ current }}、{{ currentQuestion?.title }}
+        {{ currentQuestion?.title }}
       </h2>
       <!--a-radio-group不会记录历史选项值，需要@change="doRadioChange"-->
       <div>
@@ -28,12 +28,13 @@
             </a-button>
             <a-button
               type="primary"
+              :loading="submitting"
               v-if="current === questionContent.length"
               circle
               :disabled="!currentAnswer"
               @click="doSubmit"
             >
-              查看结果
+              {{ submitting ? "分析中" : "查看结果" }}
             </a-button>
             <a-button v-if="current > 1" circle @click="current -= 1">
               上一题
@@ -83,6 +84,8 @@ const router = useRouter();
 const questionContent = ref<API.QuestionContentDTO[]>([]);
 // 获取app
 const app = ref<API.AppVO>({});
+// 是否正在提交
+const submitting = ref(false);
 
 // 当前题目的序号（从1开始）
 const current = ref(1);
@@ -211,6 +214,7 @@ const doSubmit = async () => {
   if (!props.appId || !answerList) {
     return;
   }
+  submitting.value = true;
   const res = await addUserAnswerUsingPost({
     // 传入id、内容
     appId: props.appId as any,
@@ -222,6 +226,7 @@ const doSubmit = async () => {
   } else {
     message.error("提交答案失败，" + res.data.message);
   }
+  submitting.value = false;
 };
 </script>
 

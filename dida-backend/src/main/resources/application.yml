@@ -74,3 +74,6 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.victiny.dida.controller
+#AI配置
+ai:
+  apiKey: 3bfba812f0270dac9a053d766d221cee.28wK9JGSUuaJ5n6U

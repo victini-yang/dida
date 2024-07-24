@@ -85,6 +85,8 @@ import { withDefaults, defineProps } from "vue";
 // 定义属性
 interface Props {
   id: string;
+  //接收子组件ai生成的题目和选项
+  onSuccess?: (result: API.QuestionContentDTO[]) => void;
 }
 
 // 定义属性初始值，获取到外层传递的属性，
@@ -119,14 +121,16 @@ const loadData = async () => {
   });
   if (res.data.code === 0 && res.data.data) {
     // 获取登录用户信息，提示添加成功
-    oldApp.value = res.data.data as any;
+    oldApp.value = res.data.data;
     form.value = res.data.data;
   } else {
     message.error("获取数据失败，" + res.data.message);
   }
 };
 
-watchEffect(() => loadData());
+watchEffect(() => {
+  loadData();
+});
 
 /**
  * 提交创建
@@ -147,19 +151,12 @@ const handleSubmit = async () => {
   //   获取创建信息，提示创建成功
   if (res.data.code === 0) {
     message.success("操作成功，即将跳转到应用详情页");
+    // props.id 初始值为 "" 这会被 ?? 识别为真，被||识别为假
     setTimeout(() => {
-      router.push(`/app/detail/${props.id ?? res.data.data}`);
+      router.push(`/app/detail/${props.id || res.data.data}`);
     }, 3000);
   } else {
     message.error("操作失败，" + res.data.message);
   }
 };
 </script>
-
-<!--样式-->
-<style scoped>
-#home {
-  padding: 20px;
-  background-color: #f0f0f0;
-}
-</style>
