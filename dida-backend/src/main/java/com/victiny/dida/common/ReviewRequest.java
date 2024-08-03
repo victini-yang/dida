@@ -16,7 +16,7 @@ public class ReviewRequest {
     private Long id;
 
     /**
-     * 审核状态0:待审核，1：通过，2：拒绝
+     * 状态：0-待审核, 1-通过, 2-拒绝
      */
     private Integer reviewStatus;
 
@@ -25,5 +25,6 @@ public class ReviewRequest {
      */
     private String reviewMessage;
 
-    private static final long seriaVersionUID = 1L;
+
+    private static final long serialVersionUID = 1L;
 }

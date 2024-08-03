@@ -1,7 +1,7 @@
 <template>
   <Viewer :value="value" :plugins="plugins" />
 </template>
-<!--展示渲染 markdown 语法的组件-->
+
 <script setup lang="ts">
 import gfm from "@bytemd/plugin-gfm";
 import highlight from "@bytemd/plugin-highlight";

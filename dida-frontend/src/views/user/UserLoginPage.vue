@@ -1,6 +1,5 @@
-<!--内容-->
 <template>
-  <div class="userLoginPage">
+  <div id="userLoginPage">
     <h2 style="margin-bottom: 16px">用户登录</h2>
     <a-form
       :model="form"
@@ -10,12 +9,12 @@
       @submit="handleSubmit"
     >
       <a-form-item field="userAccount" label="账号">
-        <a-input v-model="form.userAccount" placeholder="请输入你的账号" />
+        <a-input v-model="form.userAccount" placeholder="请输入账号" />
       </a-form-item>
-      <a-form-item field="userPassword" tooltip="密码不小于8位" label="密码">
+      <a-form-item field="userPassword" tooltip="密码不小于 8 位" label="密码">
         <a-input-password
           v-model="form.userPassword"
-          placeholder="请输入你的密码"
+          placeholder="请输入密码"
         />
       </a-form-item>
       <a-form-item>
@@ -37,7 +36,6 @@
   </div>
 </template>
 
-<!--行为-->
 <script setup lang="ts">
 import { reactive } from "vue";
 import API from "@/api";
@@ -49,18 +47,16 @@ import { useRouter } from "vue-router";
 const loginUserStore = useLoginUserStore();
 const router = useRouter();
 
-/**
- * 提交登录
- */
 const form = reactive({
   userAccount: "",
   userPassword: "",
-  isRead: false,
 } as API.UserLoginRequest);
+
+/**
+ * 提交
+ */
 const handleSubmit = async () => {
-  console.log(form);
   const res = await userLoginUsingPost(form);
-  //   获取登录用户信息，提示登录成功
   if (res.data.code === 0) {
     await loginUserStore.fetchLoginUser();
     message.success("登录成功");
@@ -69,15 +65,7 @@ const handleSubmit = async () => {
       replace: true,
     });
   } else {
-    message.error("登陆失败，" + res.data.message);
+    message.error("登录失败，" + res.data.message);
   }
 };
 </script>
-
-<!--样式-->
-<style scoped>
-#home {
-  padding: 20px;
-  background-color: #f0f0f0;
-}
-</style>

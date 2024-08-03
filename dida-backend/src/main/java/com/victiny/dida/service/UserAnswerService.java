@@ -32,7 +32,7 @@ public interface UserAnswerService extends IService<UserAnswer> {
      * @return
      */
     QueryWrapper<UserAnswer> getQueryWrapper(UserAnswerQueryRequest userAnswerQueryRequest);
-    
+
     /**
      * 获取用户答案封装
      *

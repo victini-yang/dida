@@ -55,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineExpose, defineProps, ref, withDefaults, watchEffect } from "vue";
+import { defineExpose, defineProps, ref, watchEffect, withDefaults } from "vue";
 import {
   deleteScoringResultUsingPost,
   listScoringResultVoByPageUsingPost,

@@ -15,7 +15,7 @@ public class AiGenerateQuestionRequest implements Serializable {
 //    涉及Json字符串转换要实现序列化接口
 
     /**
-     * 应用id
+     * 应用 id
      */
     private Long appId;
 
@@ -30,5 +30,4 @@ public class AiGenerateQuestionRequest implements Serializable {
     int optionNumber = 2;
 
     private static final long serialVersionUID = 1L;
-
 }

@@ -33,7 +33,6 @@ public interface PostService extends IService<Post> {
      */
     QueryWrapper<Post> getQueryWrapper(PostQueryRequest postQueryRequest);
 
-
     /**
      * 获取帖子封装
      *

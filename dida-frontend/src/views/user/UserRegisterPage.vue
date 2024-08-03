@@ -1,6 +1,5 @@
-<!--内容-->
 <template>
-  <div class="userRegisterPage">
+  <div id="userRegisterPage">
     <h2 style="margin-bottom: 16px">用户注册</h2>
     <a-form
       :model="form"
@@ -10,18 +9,18 @@
       @submit="handleSubmit"
     >
       <a-form-item field="userAccount" label="账号">
-        <a-input v-model="form.userAccount" placeholder="请输入你的账号" />
+        <a-input v-model="form.userAccount" placeholder="请输入账号" />
       </a-form-item>
-      <a-form-item field="userPassword" tooltip="密码不小于8位" label="密码">
+      <a-form-item field="userPassword" tooltip="密码不小于 8 位" label="密码">
         <a-input-password
           v-model="form.userPassword"
-          placeholder="请输入你的密码"
+          placeholder="请输入密码"
         />
       </a-form-item>
       <a-form-item
         field="checkPassword"
+        tooltip="确认密码不小于 8 位"
         label="确认密码"
-        tooltip="确认密码不小于8位"
       >
         <a-input-password
           v-model="form.checkPassword"
@@ -29,55 +28,45 @@
         />
       </a-form-item>
       <a-form-item>
-        <a-form-item>
-          <div
-            style="
-              display: flex;
-              width: 100%;
-              align-items: center;
-              justify-content: space-between;
-            "
-          >
-            <a-button type="primary" html-type="submit" style="width: 120px">
-              注册
-            </a-button>
-            <a-link href="/user/login">老用户登录</a-link>
-          </div>
-        </a-form-item>
+        <div
+          style="
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: space-between;
+          "
+        >
+          <a-button type="primary" html-type="submit" style="width: 120px">
+            注册
+          </a-button>
+          <a-link href="/user/login">老用户登录</a-link>
+        </div>
       </a-form-item>
     </a-form>
   </div>
 </template>
 
-<!--行为-->
 <script setup lang="ts">
 import { reactive } from "vue";
 import API from "@/api";
-import {
-  userLoginUsingPost,
-  userRegisterUsingPost,
-} from "@/api/userController";
-import { useLoginUserStore } from "@/store/userStore";
+import { userRegisterUsingPost } from "@/api/userController";
 import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
 
-const loginUserStore = useLoginUserStore();
 const router = useRouter();
 
-/**
- * 提交登录
- */
 const form = reactive({
   userAccount: "",
   userPassword: "",
   checkPassword: "",
-  isRead: false,
 } as API.UserRegisterRequest);
+
+/**
+ * 提交
+ */
 const handleSubmit = async () => {
   const res = await userRegisterUsingPost(form);
-  //   获取登录用户信息，提示登录成功
   if (res.data.code === 0) {
-    await loginUserStore.fetchLoginUser();
     message.success("注册成功");
     router.push({
       path: "/user/login",
@@ -88,11 +77,3 @@ const handleSubmit = async () => {
   }
 };
 </script>
-
-<!--样式-->
-<style scoped>
-#home {
-  padding: 20px;
-  background-color: #f0f0f0;
-}
-</style>

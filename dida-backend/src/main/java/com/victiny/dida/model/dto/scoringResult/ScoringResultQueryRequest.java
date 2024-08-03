@@ -71,6 +71,5 @@ public class ScoringResultQueryRequest extends PageRequest implements Serializab
      */
     private String searchText;
 
-
     private static final long serialVersionUID = 1L;
 }

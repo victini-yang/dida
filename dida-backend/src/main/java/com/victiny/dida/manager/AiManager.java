@@ -4,10 +4,8 @@ import com.victiny.dida.common.ErrorCode;
 import com.victiny.dida.exception.BusinessException;
 import com.zhipu.oapi.ClientV4;
 import com.zhipu.oapi.Constants;
-import com.zhipu.oapi.service.v4.model.ChatCompletionRequest;
-import com.zhipu.oapi.service.v4.model.ChatMessage;
-import com.zhipu.oapi.service.v4.model.ChatMessageRole;
-import com.zhipu.oapi.service.v4.model.ModelApiResponse;
+import com.zhipu.oapi.service.v4.model.*;
+import io.reactivex.Flowable;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -27,10 +25,10 @@ public class AiManager {
     @Resource
     private ClientV4 clientV4;
 
-    //    稳定的随机数
+    // 稳定的随机数
     private static final float STABLE_TEMPERATURE = 0.05f;
 
-    //    不稳定的随机数
+    // 不稳定的随机数
     private static final float UNSTABLE_TEMPERATURE = 0.99f;
 
     /**
@@ -45,7 +43,7 @@ public class AiManager {
     }
 
     /**
-     * 同步请求（答案稳定）
+     * 同步请求（答案较稳定）
      *
      * @param systemMessage
      * @param userMessage
@@ -77,7 +75,7 @@ public class AiManager {
      * @return
      */
     public String doRequest(String systemMessage, String userMessage, Boolean stream, Float temperature) {
-        ArrayList<ChatMessage> chatMessageList = new ArrayList<>();
+        List<ChatMessage> chatMessageList = new ArrayList<>();
         ChatMessage systemChatMessage = new ChatMessage(ChatMessageRole.SYSTEM.value(), systemMessage);
         chatMessageList.add(systemChatMessage);
         ChatMessage userChatMessage = new ChatMessage(ChatMessageRole.USER.value(), userMessage);
@@ -94,16 +92,64 @@ public class AiManager {
      * @return
      */
     public String doRequest(List<ChatMessage> messages, Boolean stream, Float temperature) {
-        ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder().model(Constants.ModelChatGLM4).stream(stream).invokeMethod(Constants.invokeMethod).temperature(temperature).messages(messages)
-//                .requestId(requestId)
+        // 构建请求
+        ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
+                .model(Constants.ModelChatGLM4)
+                .stream(stream)
+                .temperature(temperature)
+                .invokeMethod(Constants.invokeMethod)
+                .messages(messages)
                 .build();
-        ModelApiResponse invokeModelApiResp = null;
         try {
-            invokeModelApiResp = clientV4.invokeModelApi(chatCompletionRequest);
+            ModelApiResponse invokeModelApiResp = clientV4.invokeModelApi(chatCompletionRequest);
             return invokeModelApiResp.getData().getChoices().get(0).toString();
         } catch (Exception e) {
             e.printStackTrace();
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, e.getMessage());
         }
     }
+
+    /**
+     * 通用流式请求（简化消息传递）
+     *
+     * @param systemMessage
+     * @param userMessage
+     * @param temperature
+     * @return
+     */
+    public Flowable<ModelData> doStreamRequest(String systemMessage, String userMessage, Float temperature) {
+        List<ChatMessage> chatMessageList = new ArrayList<>();
+        ChatMessage systemChatMessage = new ChatMessage(ChatMessageRole.SYSTEM.value(), systemMessage);
+        chatMessageList.add(systemChatMessage);
+        ChatMessage userChatMessage = new ChatMessage(ChatMessageRole.USER.value(), userMessage);
+        chatMessageList.add(userChatMessage);
+        return doStreamRequest(chatMessageList, temperature);
+    }
+
+
+    /**
+     * 通用流式请求
+     *
+     * @param messages
+     * @param temperature
+     * @return
+     */
+    public Flowable<ModelData> doStreamRequest(List<ChatMessage> messages, Float temperature) {
+        // 构建请求
+        ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
+                .model(Constants.ModelChatGLM4)
+                .stream(Boolean.TRUE)
+                .temperature(temperature)
+                .invokeMethod(Constants.invokeMethod)
+                .messages(messages)
+                .build();
+        try {
+            ModelApiResponse invokeModelApiResp = clientV4.invokeModelApi(chatCompletionRequest);
+            return invokeModelApiResp.getFlowable();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, e.getMessage());
+        }
+    }
 }
+

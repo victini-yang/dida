@@ -32,7 +32,7 @@ public interface ScoringResultService extends IService<ScoringResult> {
      * @return
      */
     QueryWrapper<ScoringResult> getQueryWrapper(ScoringResultQueryRequest scoringResultQueryRequest);
-    
+
     /**
      * 获取评分结果封装
      *
@@ -51,3 +51,4 @@ public interface ScoringResultService extends IService<ScoringResult> {
      */
     Page<ScoringResultVO> getScoringResultVOPage(Page<ScoringResult> scoringResultPage, HttpServletRequest request);
 }
+

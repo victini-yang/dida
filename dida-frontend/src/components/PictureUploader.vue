@@ -1,4 +1,3 @@
-<!--文件上传组件-->
 <template>
   <a-space direction="vertical" :style="{ width: '100%' }">
     <a-upload
@@ -68,7 +67,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   value: () => "",
 });
-// 封装成文件对象
+
 const file = ref();
 if (props.value) {
   file.value = {
@@ -87,7 +86,6 @@ const customRequest = async (option: any) => {
     {},
     fileItem.file
   );
-  // 如果成功，就把url变成文件对象，设置给组件
   if (res.data.code === 0 && res.data.data) {
     const url = res.data.data;
     file.value = {

@@ -12,11 +12,12 @@ import java.util.stream.Collectors;
  * @Date create in 2024/7/16 17:04
  */
 public enum ReviewStatusEnum {
-    REVIEWING("待审核",0),
-    PASS("通过",1),
-    REJECT("拒绝",2);
+    REVIEWING("待审核", 0),
+    PASS("通过", 1),
+    REJECT("拒绝", 2);
 
     private final String text;
+
     private final int value;
 
     ReviewStatusEnum(String text, int value) {
@@ -25,31 +26,37 @@ public enum ReviewStatusEnum {
     }
 
     /**
-     * 通过value获取枚举
+     * 根据 value 获取枚举
+     *
      * @param value
      * @return
      */
-    public static ReviewStatusEnum getEnumByValue(Integer value){
-        if (ObjectUtil.isEmpty(value)){
+    public static ReviewStatusEnum getEnumByValue(Integer value) {
+        if (ObjectUtil.isEmpty(value)) {
             return null;
         }
-        for (ReviewStatusEnum reviewStatusEnum : ReviewStatusEnum.values()) {
-            if (reviewStatusEnum.value == value){
-                return reviewStatusEnum;
+        for (ReviewStatusEnum anEnum : ReviewStatusEnum.values()) {
+            if (anEnum.value == value) {
+                return anEnum;
             }
         }
         return null;
     }
 
-    public static List<Integer> getValues(){
+    /**
+     * 获取值列表
+     *
+     * @return
+     */
+    public static List<Integer> getValues() {
         return Arrays.stream(values()).map(item -> item.value).collect(Collectors.toList());
-    }
-
-    public String getText() {
-        return text;
     }
 
     public int getValue() {
         return value;
+    }
+
+    public String getText() {
+        return text;
     }
 }

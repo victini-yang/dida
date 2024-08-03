@@ -1,4 +1,3 @@
-<!--全局顶部栏组件-->
 <template>
   <a-row id="globalHeader" align="center" :wrap="false">
     <a-col flex="auto">
@@ -7,7 +6,6 @@
         :selected-keys="selectedKeys"
         @menu-item-click="doMenuClick"
       >
-        >
         <a-menu-item
           key="0"
           :style="{ padding: 0, marginRight: '38px' }"
@@ -18,7 +16,6 @@
             <div class="title">滴答</div>
           </div>
         </a-menu-item>
-        <!--        开发根据路由自动生成菜单项-->
         <a-menu-item v-for="item in visibleRoutes" :key="item.path">
           {{ item.name }}
         </a-menu-item>
@@ -42,21 +39,15 @@ import { computed, ref } from "vue";
 import { useLoginUserStore } from "@/store/userStore";
 import checkAccess from "@/access/checkAccess";
 
-// 获取当前登录用户信息
 const loginUserStore = useLoginUserStore();
 
 const router = useRouter();
-// 当前栏选中菜单项
+// 当前选中的菜单项
 const selectedKeys = ref(["/"]);
 // 路由跳转时，自动更新选中的菜单项
-router.afterEach((to) => {
+router.afterEach((to, from, failure) => {
   selectedKeys.value = [to.path];
 });
-
-// 菜单项点击事件
-const doMenuClick = (key: string) => {
-  router.push({ path: key });
-};
 
 // 展示在菜单栏的路由数组
 const visibleRoutes = computed(() => {
@@ -71,6 +62,13 @@ const visibleRoutes = computed(() => {
     return true;
   });
 });
+
+// 点击菜单跳转到对应页面
+const doMenuClick = (key: string) => {
+  router.push({
+    path: key,
+  });
+};
 </script>
 
 <style scoped>

@@ -1,6 +1,5 @@
-<!--内容-->
 <template>
-  <div class="userLoginPage">
+  <div id="addAppPage">
     <h2 style="margin-bottom: 32px">创建应用</h2>
     <a-form
       :model="form"
@@ -10,15 +9,18 @@
       @submit="handleSubmit"
     >
       <a-form-item field="appName" label="应用名称">
-        <a-input v-model="form.appName" placeholder="请输入你的应用名称" />
+        <a-input v-model="form.appName" placeholder="请输入应用名称" />
       </a-form-item>
       <a-form-item field="appDesc" label="应用描述">
-        <a-input v-model="form.appDesc" placeholder="请输入你的应用描述" />
+        <a-input v-model="form.appDesc" placeholder="请输入应用描述" />
+      </a-form-item>
+      <a-form-item field="appIcon" label="应用图标">
+        <a-input v-model="form.appIcon" placeholder="请输入应用图标" />
       </a-form-item>
       <!--      <a-form-item field="appIcon" label="应用图标">-->
       <!--        <PictureUploader-->
       <!--          :value="form.appIcon"-->
-      <!--          :on-change="(value) => (form.appIcon = value)"-->
+      <!--          :onChange="(value) => (form.appIcon = value)"-->
       <!--        />-->
       <!--      </a-form-item>-->
       <a-form-item field="appType" label="应用类型">
@@ -47,29 +49,17 @@
           />
         </a-select>
       </a-form-item>
-
       <a-form-item>
-        <div
-          style="
-            display: flex;
-            width: 100%;
-            align-items: center;
-            justify-content: space-between;
-          "
-        >
-          <a-button type="primary" html-type="submit" style="width: 120px">
-            提交
-          </a-button>
-          <a-link href="/user/register">新用户注册</a-link>
-        </div>
+        <a-button type="primary" html-type="submit" style="width: 120px">
+          提交
+        </a-button>
       </a-form-item>
     </a-form>
   </div>
 </template>
 
-<!--行为-->
 <script setup lang="ts">
-import { ref, watchEffect } from "vue";
+import { defineProps, ref, watchEffect, withDefaults } from "vue";
 import API from "@/api";
 import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
@@ -80,16 +70,10 @@ import {
 } from "@/api/appController";
 import { APP_SCORING_STRATEGY_MAP, APP_TYPE_MAP } from "@/constant/app";
 
-import { withDefaults, defineProps } from "vue";
-
-// 定义属性
 interface Props {
   id: string;
-  //接收子组件ai生成的题目和选项
-  onSuccess?: (result: API.QuestionContentDTO[]) => void;
 }
 
-// 定义属性初始值，获取到外层传递的属性，
 const props = withDefaults(defineProps<Props>(), {
   id: () => {
     return "";
@@ -115,12 +99,10 @@ const loadData = async () => {
   if (!props.id) {
     return;
   }
-  // 获取 appvo
   const res = await getAppVoByIdUsingGet({
     id: props.id as any,
   });
   if (res.data.code === 0 && res.data.data) {
-    // 获取登录用户信息，提示添加成功
     oldApp.value = res.data.data;
     form.value = res.data.data;
   } else {
@@ -128,30 +110,28 @@ const loadData = async () => {
   }
 };
 
+// 获取旧数据
 watchEffect(() => {
   loadData();
 });
 
 /**
- * 提交创建
+ * 提交
  */
 const handleSubmit = async () => {
   let res: any;
+  // 如果是修改
   if (props.id) {
-    //   如果是修改
     res = await editAppUsingPost({
-      // 传入id、表单项
       id: props.id as any,
       ...form.value,
     });
   } else {
-    //   调用创建
+    // 创建
     res = await addAppUsingPost(form.value);
   }
-  //   获取创建信息，提示创建成功
   if (res.data.code === 0) {
     message.success("操作成功，即将跳转到应用详情页");
-    // props.id 初始值为 "" 这会被 ?? 识别为真，被||识别为假
     setTimeout(() => {
       router.push(`/app/detail/${props.id || res.data.data}`);
     }, 3000);

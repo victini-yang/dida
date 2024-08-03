@@ -20,7 +20,6 @@ public class AppQueryRequest extends PageRequest implements Serializable {
     /**
      * id
      */
-    @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
     /**
@@ -69,7 +68,7 @@ public class AppQueryRequest extends PageRequest implements Serializable {
     private Long userId;
 
     /**
-     * 创建用户 id
+     * id
      */
     private Long notId;
 

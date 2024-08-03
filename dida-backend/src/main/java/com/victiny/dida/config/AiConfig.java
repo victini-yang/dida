@@ -17,10 +17,14 @@ import org.springframework.context.annotation.Configuration;
 @Data
 public class AiConfig {
 
+    /**
+     * apiKey，需要从开放平台获取
+     */
+
     private String apiKey;
 
     @Bean
-    public ClientV4 getClientV4(){
+    public ClientV4 getClientV4() {
         return new ClientV4.Builder(apiKey).build();
     }
 }

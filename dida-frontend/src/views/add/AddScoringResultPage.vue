@@ -1,4 +1,3 @@
-<!--内容-->
 <template>
   <div id="addScoringResultPage">
     <h2 style="margin-bottom: 32px">设置评分</h2>
@@ -52,28 +51,21 @@
   </div>
 </template>
 
-<!--行为-->
 <script setup lang="ts">
-import { ref, watchEffect } from "vue";
+import { defineProps, ref, withDefaults } from "vue";
 import API from "@/api";
-import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
+import ScoringResultTable from "@/views/add/components/ScoringResultTable.vue";
 import {
   addScoringResultUsingPost,
   editScoringResultUsingPost,
-  getScoringResultVoByIdUsingGet,
 } from "@/api/scoringResultController";
-import ScoringResultTable from "@/views/add/components/ScoringResultTable.vue";
+import message from "@arco-design/web-vue/es/message";
 
-import { withDefaults, defineProps } from "vue";
-import { APP_SCORING_STRATEGY_MAP, APP_TYPE_MAP } from "@/constant/app";
-
-// 定义属性
 interface Props {
   appId: string;
 }
 
-// 定义属性初始值，获取到外层传递的属性，
 const props = withDefaults(defineProps<Props>(), {
   appId: () => {
     return "";
@@ -92,36 +84,10 @@ const form = ref({
 
 const updateId = ref<any>();
 
-const oldScoringResult = ref<API.ScoringResultVO>();
-
-// 接收子组件传入的scoringResult，类型是API.ScoringResultVO
 const doUpdate = (scoringResult: API.ScoringResultVO) => {
-  // 给表格传入updateId和其值
   updateId.value = scoringResult.id;
   form.value = scoringResult;
 };
-
-/**
- * 加载数据
- */
-const loadData = async () => {
-  if (!props.appId) {
-    return;
-  }
-  // 获取 scoringResultvo
-  const res = await getScoringResultVoByIdUsingGet({
-    id: props.appId as any,
-  });
-  if (res.data.code === 0 && res.data.data) {
-    // 获取登录用户信息，提示添加成功
-    oldScoringResult.value = res.data.data as any;
-    form.value = res.data.data;
-  } else {
-    message.error("获取数据失败，" + res.data.message);
-  }
-};
-
-watchEffect(() => loadData());
 
 /**
  * 提交

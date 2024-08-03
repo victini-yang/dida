@@ -53,19 +53,13 @@ public class QuestionVO implements Serializable {
     private Date updateTime;
 
     /**
-     * 是否删除
-     */
-    @TableLogic
-    private Integer isDelete;
-
-    /**
      * 创建用户信息
      */
     private UserVO user;
 
     /**
      * 封装类转对象
-     * 题目内容
+     *
      * @param questionVO
      * @return
      */
@@ -75,9 +69,8 @@ public class QuestionVO implements Serializable {
         }
         Question question = new Question();
         BeanUtils.copyProperties(questionVO, question);
-//        封装类Vo转字符串，先取出对象
-//        对象转成字符串，再设置进去
-        question.setQuestionContent(JSONUtil.toJsonStr(questionVO.getQuestionContent()));
+        List<QuestionContentDTO> questionContentDTO = questionVO.getQuestionContent();
+        question.setQuestionContent(JSONUtil.toJsonStr(questionContentDTO));
         return question;
     }
 
@@ -93,7 +86,6 @@ public class QuestionVO implements Serializable {
         }
         QuestionVO questionVO = new QuestionVO();
         BeanUtils.copyProperties(question, questionVO);
-//        对象转成JSON字符串，字符串转成Vo封装对象
         String questionContent = question.getQuestionContent();
         if (questionContent != null) {
             questionVO.setQuestionContent(JSONUtil.toList(questionContent, QuestionContentDTO.class));

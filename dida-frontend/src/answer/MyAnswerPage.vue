@@ -71,7 +71,6 @@ import { ref, watchEffect } from "vue";
 import {
   deleteUserAnswerUsingPost,
   listMyUserAnswerVoByPageUsingPost,
-  listUserAnswerByPageUsingPost,
 } from "@/api/userAnswerController";
 import API from "@/api";
 import message from "@arco-design/web-vue/es/message";

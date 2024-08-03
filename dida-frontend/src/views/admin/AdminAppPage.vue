@@ -97,7 +97,7 @@ import {
   APP_TYPE_MAP,
   REVIEW_STATUS_ENUM,
   REVIEW_STATUS_MAP,
-} from "../../constant/app";
+} from "@/constant/app";
 
 const formSearchParams = ref<API.AppQueryRequest>({});
 

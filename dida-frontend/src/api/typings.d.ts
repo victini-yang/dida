@@ -64,7 +64,6 @@ declare namespace API {
     appName?: string;
     appType?: number;
     id?: number;
-    isDelete?: number;
     reviewMessage?: string;
     reviewStatus?: number;
     reviewTime?: string;
@@ -583,7 +582,6 @@ declare namespace API {
     appId?: number;
     createTime?: string;
     id?: number;
-    isDelete?: number;
     questionContent?: QuestionContentDTO[];
     updateTime?: string;
     user?: UserVO;

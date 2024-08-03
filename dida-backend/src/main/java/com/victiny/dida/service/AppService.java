@@ -32,7 +32,7 @@ public interface AppService extends IService<App> {
      * @return
      */
     QueryWrapper<App> getQueryWrapper(AppQueryRequest appQueryRequest);
-    
+
     /**
      * 获取应用封装
      *
@@ -51,3 +51,4 @@ public interface AppService extends IService<App> {
      */
     Page<AppVO> getAppVOPage(Page<App> appPage, HttpServletRequest request);
 }
+

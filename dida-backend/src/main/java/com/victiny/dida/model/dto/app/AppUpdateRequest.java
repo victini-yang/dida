@@ -18,7 +18,6 @@ public class AppUpdateRequest implements Serializable {
     /**
      * id
      */
-    @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
     /**
@@ -65,11 +64,6 @@ public class AppUpdateRequest implements Serializable {
      * 审核时间
      */
     private Date reviewTime;
-
-    /**
-     * 是否删除
-     */
-    private Integer isDelete;
 
     private static final long serialVersionUID = 1L;
 }

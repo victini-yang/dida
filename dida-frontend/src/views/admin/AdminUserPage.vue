@@ -1,6 +1,4 @@
-<!--内容-->
 <template>
-  <!--  搜索-->
   <a-form
     :model="formSearchParams"
     :style="{ marginBottom: '20px' }"
@@ -27,7 +25,6 @@
       </a-button>
     </a-form-item>
   </a-form>
-  <!--  应用表格数据，显示总数、记录数、当前页-->
   <a-table
     :columns="columns"
     :data="dataList"
@@ -39,18 +36,15 @@
     }"
     @page-change="onPageChange"
   >
-    <!--  表格列图片渲染-->
     <template #userAvatar="{ record }">
       <a-image width="64" :src="record.userAvatar" />
     </template>
-    <!--    引入创建时间、修改时间的插槽-->
     <template #createTime="{ record }">
       {{ dayjs(record.createTime).format("YYYY-MM-DD HH:mm:ss") }}
     </template>
     <template #updateTime="{ record }">
-      {{ dayjs(record.createTime).format("YYYY-MM-DD HH:mm:ss") }}
+      {{ dayjs(record.updateTime).format("YYYY-MM-DD HH:mm:ss") }}
     </template>
-    <!--    添加修改、删除插槽-->
     <template #optional="{ record }">
       <a-space>
         <a-button status="danger" @click="doDelete(record)">删除</a-button>
@@ -59,7 +53,6 @@
   </a-table>
 </template>
 
-<!--行为-->
 <script setup lang="ts">
 import { ref, watchEffect } from "vue";
 import {
@@ -78,16 +71,15 @@ const initSearchParams = {
   pageSize: 10,
 };
 
-// 搜索参数,响应式编程
 const searchParams = ref<API.UserQueryRequest>({
   ...initSearchParams,
 });
-// 定义数据列表
 const dataList = ref<API.User[]>([]);
-// 定义总数
 const total = ref<number>(0);
 
-// 表格数据
+/**
+ * 加载数据
+ */
 const loadData = async () => {
   const res = await listUserByPageUsingPost(searchParams.value);
   if (res.data.code === 0) {
@@ -98,7 +90,9 @@ const loadData = async () => {
   }
 };
 
-// 点击搜索，才会触发数据加载进行搜索
+/**
+ * 执行搜索
+ */
 const doSearch = () => {
   searchParams.value = {
     ...initSearchParams,
@@ -106,16 +100,21 @@ const doSearch = () => {
   };
 };
 
-// 分页改变事件，改变数据，触发页面重新加载
+/**
+ * 当分页变化时，改变搜索条件，触发数据加载
+ * @param page
+ */
 const onPageChange = (page: number) => {
   searchParams.value = {
-    // 创建新的变量，以防不会渲染
     ...searchParams.value,
     current: page,
   };
 };
 
-// 修改和删除
+/**
+ * 删除
+ * @param record
+ */
 const doDelete = async (record: API.User) => {
   if (!record.id) {
     return;
@@ -125,18 +124,19 @@ const doDelete = async (record: API.User) => {
     id: record.id,
   });
   if (res.data.code === 0) {
-    message.success("删除成功");
     loadData();
   } else {
     message.error("删除失败，" + res.data.message);
   }
 };
 
-// 1.刚进入页面的时候加载数据 2.数据发生变化的时候重新加载数据
-// 通过监听数据
+/**
+ * 监听 searchParams 变量，改变时触发数据的重新加载
+ */
 watchEffect(() => {
   loadData();
 });
+
 // 表格列配置
 const columns = [
   {

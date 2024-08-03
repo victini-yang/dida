@@ -12,10 +12,11 @@ import java.util.stream.Collectors;
  * @Date create in 2024/7/16 16:53
  */
 public enum AppScoringStrategyEnum {
-    CUSTOM("自定义",0),
-    AI("AI",1);
+    CUSTOM("自定义", 0),
+    AI("AI", 1);
 
     private final String text;
+
     private final int value;
 
     AppScoringStrategyEnum(String text, int value) {
@@ -24,16 +25,17 @@ public enum AppScoringStrategyEnum {
     }
 
     /**
-     * 根据value获取enum
+     * 根据 value 获取枚举
+     *
      * @param value
      * @return
      */
-    public static AppScoringStrategyEnum getEnumByValue(Integer value){
-        if (ObjectUtil.isEmpty(value)){
+    public static AppScoringStrategyEnum getEnumByValue(Integer value) {
+        if (ObjectUtil.isEmpty(value)) {
             return null;
         }
         for (AppScoringStrategyEnum anEnum : AppScoringStrategyEnum.values()) {
-            if (anEnum.value == value){
+            if (anEnum.value == value) {
                 return anEnum;
             }
         }
@@ -42,17 +44,18 @@ public enum AppScoringStrategyEnum {
 
     /**
      * 获取值列表
+     *
      * @return
      */
-    public static List<Integer> getValues(){
+    public static List<Integer> getValues() {
         return Arrays.stream(values()).map(item -> item.value).collect(Collectors.toList());
-    }
-
-    public String getText() {
-        return text;
     }
 
     public int getValue() {
         return value;
+    }
+
+    public String getText() {
+        return text;
     }
 }

@@ -53,7 +53,6 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
     @Resource
     private PostFavourMapper postFavourMapper;
 
-
     @Override
     public void validPost(Post post, boolean add) {
         if (post == null) {

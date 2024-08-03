@@ -14,6 +14,7 @@ import com.victiny.dida.model.entity.ScoringResult;
 import com.victiny.dida.model.entity.User;
 import com.victiny.dida.model.vo.ScoringResultVO;
 import com.victiny.dida.model.vo.UserVO;
+import com.victiny.dida.service.AppService;
 import com.victiny.dida.service.ScoringResultService;
 import com.victiny.dida.service.UserService;
 import com.victiny.dida.utils.SqlUtils;
@@ -44,7 +45,7 @@ public class ScoringResultServiceImpl extends ServiceImpl<ScoringResultMapper, S
     private UserService userService;
 
     @Resource
-    private AppServiceImpl appService;
+    private AppService appService;
 
     /**
      * 校验数据
