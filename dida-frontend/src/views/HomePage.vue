@@ -40,6 +40,7 @@ import { listAppVoByPageUsingPost } from "@/api/appController";
 import message from "@arco-design/web-vue/es/message";
 import { REVIEW_STATUS_ENUM } from "@/constant/app";
 import { on } from "@arco-design/web-vue/es/_utils/dom";
+import ShareModel from "@/components/ShareModal.vue";
 
 // 初始化搜索条件（不应该被修改）
 const initSearchParams = {

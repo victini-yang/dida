@@ -26,5 +26,10 @@ public class UserAnswerAddRequest implements Serializable {
      */
     private List<String> choices;
 
+    /**
+     * id(用户答案id，用于保证提交答案的幂等性）
+     */
+    private Long id;
+
     private static final long serialVersionUID = 1L;
 }
