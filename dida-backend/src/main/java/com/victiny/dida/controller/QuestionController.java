@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * 题目接口
  *
@@ -331,7 +332,7 @@ public class QuestionController {
     }
 
     @GetMapping("/ai_generate/sse")
-    public SseEmitter aiGenerateQuestionSSE(AiGenerateQuestionRequest aiGenerateQuestionRequest,HttpServletRequest request) {
+    public SseEmitter aiGenerateQuestionSSE(AiGenerateQuestionRequest aiGenerateQuestionRequest, HttpServletRequest request) {
         ThrowUtils.throwIf(aiGenerateQuestionRequest == null, ErrorCode.PARAMS_ERROR);
         // 获取参数
         Long appId = aiGenerateQuestionRequest.getAppId();
@@ -352,12 +353,12 @@ public class QuestionController {
         StringBuilder stringBuilder = new StringBuilder();
 
         // 获取登录用户
-        User loginUser = userService.getLoginUser(request);
+        // User loginUser = userService.getLoginUser(request);
         // 默认全局线程池
         Scheduler scheduler = Schedulers.io();
-        if ("vip".equals(loginUser.getUserRole())) {
-            scheduler = vipScheduler;
-        }
+        // if ("vip".equals(loginUser.getUserRole())) {
+        //     scheduler = vipScheduler;
+        // }
         modelDataFlowable
                 .observeOn(scheduler)
                 .map(modelData -> modelData.getChoices().get(0).getDelta().getContent())
@@ -446,7 +447,7 @@ public class QuestionController {
                             // 输出当前线程的名称
                             System.out.println(Thread.currentThread().getName());
                             // 模拟普通用户阻塞
-                            if (!isVip){
+                            if (!isVip) {
                                 Thread.sleep(10000L);
                             }
                             // 可以拼接题目，并且通过 SSE 返回给前端
